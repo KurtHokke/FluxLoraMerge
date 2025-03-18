@@ -299,9 +299,11 @@ class CXH_Lora_Merge:
 
     def gen(self,savename ,main_lora,merge_lora,merge_type,weight,):
         
-        lora_path_1  = os.path.join(folder_paths.models_dir,"loras",main_lora)
-        lora_path_2  = os.path.join(folder_paths.models_dir,"loras",merge_lora)
-        save_lora  = os.path.join(folder_paths.models_dir,"loras",savename+".safetensors")
+        lora_path_1  = folder_paths.get_full_path_or_raise("loras", main_lora)
+        lora_path_2  = folder_paths.get_full_path_or_raise("loras", merge_lora)
+        save_lora  = os.path.join(os.path.dirname(lora_path_1), savename + ".safetensors")
+        if os.path.exists(save_lora):
+            raise FileExistsError(f"The file {save_lora} already exists. Choose a different savename.")
         
         print(lora_path_1)
         main_lora_model = load_file(lora_path_1)
